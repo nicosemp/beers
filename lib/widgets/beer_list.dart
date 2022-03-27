@@ -22,7 +22,7 @@ class _BeerListState extends State<BeerList> {
     _filteredBeerList = (widget.beerList as List<Beer>);
 
     _searchTextController.addListener(() {
-      String filter = _searchTextController.text;
+      String filter = _searchTextController.text.toLowerCase();
       setState(() {
         _filteredBeerList = (widget.beerList as List<Beer>).where((beer) {
           return (beer.name?.toLowerCase().contains(filter) ?? false) ||
@@ -41,14 +41,20 @@ class _BeerListState extends State<BeerList> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchTextController,
-              decoration: const InputDecoration(
-                labelText: "Filter...",
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: "Search...",
+                suffixIcon: IconButton(
+                  onPressed: _searchTextController.clear,
+                  icon: const Icon(Icons.clear),
+                ),
               ),
             ),
           ),
         ),
         Expanded(
           child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               itemCount: _filteredBeerList.length,
@@ -60,73 +66,11 @@ class _BeerListState extends State<BeerList> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Hero(
-                              tag: "image-birra-" +
-                                  (_filteredBeerList[index].name ?? ""),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    _filteredBeerList[index].imageUrl ?? "",
-                                placeholder: (context, url) => const Center(
-                                  child: SizedBox(
-                                    height: 40.0,
-                                    width: 40.0,
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                            ),
-                          ),
+                          child: _beerImage(index),
                         ),
                         Expanded(
                           flex: 6,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _filteredBeerList[index].name ?? "",
-                                  style: const TextStyle(fontSize: 16.0),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: Text(
-                                    _filteredBeerList[index].description ?? "",
-                                    style:
-                                        TextStyle(color: Colors.grey.shade600),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    const Text("ABV: "),
-                                    Text(
-                                      (_filteredBeerList[index].abv ?? "N/A")
-                                              .toString() +
-                                          "%",
-                                      style: TextStyle(
-                                          color: Colors.grey.shade700),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Text("IBU: "),
-                                    Text(
-                                      (_filteredBeerList[index].ibu ?? "N/A")
-                                          .toString(),
-                                      style: TextStyle(
-                                          color: Colors.grey.shade700),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
+                          child: _beerDetails(index),
                         ),
                       ],
                     ),
@@ -149,6 +93,70 @@ class _BeerListState extends State<BeerList> {
           ),
         ),
       ],
+    );
+  }
+
+  Padding _beerImage(int index) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Hero(
+        tag: "image-birra-" + (_filteredBeerList[index].name ?? ""),
+        child: CachedNetworkImage(
+          imageUrl: _filteredBeerList[index].imageUrl ?? "",
+          placeholder: (context, url) => const Center(
+            child: SizedBox(
+              height: 40.0,
+              width: 40.0,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
+      ),
+    );
+  }
+
+  Padding _beerDetails(int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _filteredBeerList[index].name ?? "",
+            style: const TextStyle(fontSize: 16.0),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              _filteredBeerList[index].description ?? "",
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
+          ),
+          Row(
+            children: [
+              const Text("ABV: "),
+              Text(
+                (_filteredBeerList[index].abv ?? "N/A").toString() + "%",
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              const Text("IBU: "),
+              Text(
+                (_filteredBeerList[index].ibu ?? "N/A").toString(),
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
