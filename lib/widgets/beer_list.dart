@@ -53,43 +53,40 @@ class _BeerListState extends State<BeerList> {
           ),
         ),
         Expanded(
-          child: SingleChildScrollView(
+          child: ListView.builder(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _filteredBeerList.length,
-              shrinkWrap: true,
-              itemBuilder: (context, int index) {
-                return InkWell(
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: _beerImage(index),
-                        ),
-                        Expanded(
-                          flex: 6,
-                          child: _beerDetails(index),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return BeerPage(
-                            beer: _filteredBeerList[index],
-                          );
-                        },
+            itemCount: _filteredBeerList.length,
+            shrinkWrap: true,
+            itemBuilder: (context, int index) {
+              return InkWell(
+                child: Card(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: _beerImage(index),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                      Expanded(
+                        flex: 6,
+                        child: _beerDetails(index),
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return BeerPage(
+                          beer: _filteredBeerList[index],
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       ],
