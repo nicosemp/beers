@@ -1,6 +1,6 @@
 # beers
 
-A new Flutter project.
+Demo app for a job application
 
 ## Getting Started
 
