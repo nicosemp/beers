@@ -98,17 +98,19 @@ class _BeerListState extends State<BeerList> {
       padding: const EdgeInsets.all(8.0),
       child: Hero(
         tag: "image-birra-" + (_filteredBeerList[index].name ?? ""),
-        child: CachedNetworkImage(
-          imageUrl: _filteredBeerList[index].imageUrl ?? "",
-          placeholder: (context, url) => const Center(
-            child: SizedBox(
-              height: 40.0,
-              width: 40.0,
-              child: CircularProgressIndicator(),
-            ),
-          ),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
+        child: _filteredBeerList[index].imageUrl != ""
+            ? CachedNetworkImage(
+                imageUrl: _filteredBeerList[index].imageUrl ?? "",
+                placeholder: (context, url) => const Center(
+                  child: SizedBox(
+                    height: 40.0,
+                    width: 40.0,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              )
+            : Container(),
       ),
     );
   }

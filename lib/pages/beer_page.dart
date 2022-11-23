@@ -23,13 +23,15 @@ class BeerPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Hero(
                   tag: "image-birra-" + (beer?.name ?? ""),
-                  child: CachedNetworkImage(
-                    imageUrl: beer?.imageUrl ?? "",
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
+                  child: beer?.imageUrl != ""
+                      ? CachedNetworkImage(
+                          imageUrl: beer?.imageUrl ?? "",
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        )
+                      : Container(),
                 ),
               ),
             ),
