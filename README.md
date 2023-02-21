@@ -1,6 +1,6 @@
 # beers
 
-Demo app for a job application
+Lists beers from punkapi.com
 
 ## Getting Started
 
